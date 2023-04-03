@@ -5,13 +5,27 @@ db.serialize(() => {
   db.run("CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, wallet TEXT)");
 });
 
-//database function to return all reviews for a professor
+//most likely useless function that would return all reviews for a given professor. 90% sure we will replace this with blockchain lookup.
+db.getReviews = (professorId) => {
+  db.all(
+    "SELECT * FROM XXX WHERE professorId = ?",
+    [professorId],
+    (err, rows) => {
+      if (err) {
+        console.error("Error getting reviews from database:", err);
+        return rows;
+      } else {
+        return rows;
+      }
+    }
+  );
+};
 
-//wrap this in a function that takes in the id of the professor and returns the reviews
-db.getReviews = (id) => {
-  db.all("SELECT * FROM users WHERE id = ?", [id], (err, rows) => {
+//database function to return all universities
+db.getUniversities = () => {
+  db.all("SELECT * FROM XXX", (err, rows) => {
     if (err) {
-      console.error("Error getting reviews from database:", err);
+      console.error("Error getting universities from database:", err);
       return rows;
     } else {
       return rows;
@@ -19,4 +33,20 @@ db.getReviews = (id) => {
   });
 };
 
-module.exports = { db, getReviews };
+//database function to return all professors for a university
+db.getProfessors = (universityId) => {
+  db.all(
+    "SELECT professorId FROM XXX WHERE universityId = ?",
+    [universityId],
+    (err, rows) => {
+      if (err) {
+        console.error("Error getting professors from database:", err);
+        return rows;
+      } else {
+        return rows;
+      }
+    }
+  );
+};
+
+module.exports = { db };

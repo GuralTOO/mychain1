@@ -6,6 +6,7 @@ const contractABI = []; // Replace with your smart contract ABI
 const contractAddress = "0x..."; // Replace with your smart contract address
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 
+// We will 90% likely not need this function
 const updateDatabaseOnReviewAdded = () => {
   contract.events
     .ReviewAdded()
@@ -30,6 +31,7 @@ const updateDatabaseOnReviewAdded = () => {
     });
 };
 
+// This function will be called when a user adds a review
 const addReview = async (userId, wallet, fromAddress, privateKey) => {
   try {
     const nonce = await web3.eth.getTransactionCount(fromAddress);
