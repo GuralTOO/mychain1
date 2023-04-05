@@ -1,9 +1,5 @@
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database(":memory:");
-//Connect to DB
-// const db = new sqlite3.Database('./test.db', sqlite3.OPEN_READWRITE, (err)=>{
-//   if (err) return console.error(err.message);
-// })
 
 db.serialize(() => {
   db.run('CREATE TABLE IF NOT EXISTS professors (id INTEGER PRIMARY KEY AUTOINCREMENT, blockchainID INTEGER UNIQUE NOT NULL, name TEXT NOT NULL)');
@@ -143,7 +139,7 @@ db.deleteTeaching = (id) => {
 db.getUniversities = () => {
   db.all("SELECT * FROM university", (err, rows) => {
     if (err) {
-      console.error("Error getting professor from the database:", err);
+      console.error("Error getting universities from the database:", err);
       return rows;
     } else {
       return rows;
