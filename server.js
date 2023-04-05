@@ -10,6 +10,7 @@ const {
   addReview,
 } = require("./contract");
 const db = require("./database");
+const isHateSpeech = require("./ApiServices");
 
 app.use(cors());
 app.use(express.json());
@@ -25,10 +26,23 @@ updateDatabaseOnUserUpdated();
 //receive a request to create a new review
 app.post("/api/addReview", async (req, res) => {
   // Add review to blockchain contract
-  const { userId, wallet } = req.body;
+  const { userId, wallet, review } = req.body;
   const fromAddress = "0x..."; // Replace with the address that will send the transaction
   const privateKey = "0x..."; // Replace with the private key of the fromAddress
 
+  // Check if review is hate speech
+  const isHate = await isHateSpeech(review);
+  if (isHate == -1) {
+    res
+      .status(500)
+      .json({ success: false, error: "Error calling isHateSpeech" });
+    return;
+  } else if (isHate) {
+    res
+      .status(500)
+      .json({ success: false, error: "Review contains hate speech" });
+    return;
+  }
   const result = await addReview(userId, wallet, fromAddress, privateKey);
 
   if (result.success) {
