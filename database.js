@@ -6,9 +6,9 @@ db.serialize(() => {
   db.run('CREATE TABLE IF NOT EXISTS university (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)');
   db.run('CREATE TABLE IF NOT EXISTS course (id INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT NOT NULL, name TEXT NOT NULL)');
   db.run('CREATE TABLE IF NOT EXISTS teaching (id INTEGER PRIMARY KEY AUTOINCREMENT, professorID INTEGER REFERENCES professors(id), universityID INTEGER REFERENCES university(id), courseID TEXT REFERENCES course(id))');
-  //db.run('CREATE TABLE reviews (id INTEGER PRIMARY KEY AUTOINCREMENT, professorID INTEGER REFERENCES professors(id), university TEXT NOT NULL, rating INTEGER, review TEXT)');
+  db.run('CREATE TABLE reviews (id INTEGER PRIMARY KEY AUTOINCREMENT, professorID INTEGER REFERENCES professors(id), university TEXT NOT NULL, rating INTEGER, review TEXT)');
   // Trigger checks rating is between 0 and 10 before inserting new row
-  //db.run('CREATE TRIGGER IF NOT EXISTS check_rating BEFORE INSERT ON reviews WHEN NEW.rating < 0 OR NEW.rating > 10 BEGIN SELECT RAISE(ABORT, "Rating must be between 0 and 10"); END;');
+  db.run('CREATE TRIGGER IF NOT EXISTS check_rating BEFORE INSERT ON reviews WHEN NEW.rating < 0 OR NEW.rating > 10 BEGIN SELECT RAISE(ABORT, "Rating must be between 0 and 10"); END;');
 });
 
 // INSERT Data
@@ -51,6 +51,16 @@ db.addTeaching = (professorID, universityID, course) => {
     }
     return success.changes > 0 ? true : false;
 }
+
+db.addReview = (professorId, university, rating, reviewText) => {
+  let success = false;
+    try {
+      success = db.run("INSERT INTO REVIEWS (professorID, university, rating, review) VALUES (?, ?, ?, ?)", [professorId, university, rating, reviewText]);
+    } catch (dbError) {
+      console.error(dbError);
+    }
+    return success.changes > 0 ? true : false;
+  }
 
 // UPDATE Data
 db.updateProfessor = (id, blockchainID, name) => {
@@ -134,6 +144,16 @@ db.deleteTeaching = (id) => {
   return success.changes > 0 ? true : false;
 }
 
+db.deleteReview = (id) => {
+  let success = false;
+  try {
+    success = db.run("Delete from REVIEWS WHERE id = ?", [id]);
+  } catch (dbError) {
+    console.error(dbError);
+  }
+  return success.changes > 0 ? true : false;
+}
+
 // GET Data 
 // get all columns from university table
 db.getUniversities = () => {
@@ -167,6 +187,18 @@ db.getAllProfessors = () => {
   db.all("SELECT * FROM professors", (err, rows) => {
     if (err) {
       console.error("Error getting professor from the database:", err);
+      return rows;
+    } else {
+      return rows;
+    }
+  });
+};
+
+// get Reviews for a professor by professor id
+db.getReviews = (id) => {
+  db.all("SELECT professors.name, reviews.university, reviews.rating, reviews.review FROM reviews INNER JOIN professors ON reviews.professorID = professors.id WHERE professors.ID = ?", [id], (err, rows) => {
+    if (err) {
+      console.error("Error getting reviews from database:", err);
       return rows;
     } else {
       return rows;
