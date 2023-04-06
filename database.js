@@ -187,6 +187,19 @@ db.getAllProfessors = () => {
   });
 };
 
+// return all professors with the name ?
+db.getProfessorsName = (name) => {
+  db.all("SELECT * FROM professors WHERE name = ?", [name], (err, rows) => {
+    if (err) {
+      console.error("Error getting professors from the database:", err);
+      return rows;
+    } else {
+      console.log(rows);
+      return rows;
+    }
+  });
+};
+
 // get Reviews for a professor by professor id
 // db.getReviews = (id) => {
 //   db.all("SELECT professors.name, reviews.university, reviews.rating, reviews.review FROM reviews INNER JOIN professors ON reviews.professorID = professors.id WHERE professors.ID = ?", [id], (err, rows) => {
@@ -258,6 +271,8 @@ db.serialize(() => {
   db.getUniversities();
   db.getAllProfessors();
   db.getProfessors(1);
+  db.getProfessorsName("Lewis Tseng");
+
 
   // UPDATE Data
 //   db.updateProfessor(1, "Jane Doe");
