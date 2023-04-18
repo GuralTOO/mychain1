@@ -32,6 +32,7 @@ app.listen(3001, () => {
 // Nate changes: are we still doing this or no?
 updateDatabaseOnUserUpdated();
 
+// Nate changes: should this be a different path, the function is in the contract.js
 //receive a request to create a new review
 app.post("/api/addReview", async (req, res) => {
   // Add review to blockchain contract
