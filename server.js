@@ -6,9 +6,8 @@ const app = express();
 const {
   // updateDatabaseOnUserUpdated,
   addReview,
-  getReviews
+  getReviews,
 } = require("./contract");
-
 
 const {
   // contract,
