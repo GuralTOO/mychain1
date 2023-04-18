@@ -3,10 +3,10 @@ const cors = require("cors");
 const app = express();
 
 const {
-  contract,
-  updateDatabaseOnUserUpdated,
-  web3,
-  updateUser,
+  // contract,
+  // updateDatabaseOnUserUpdated,
+  // web3,
+  getReviews,
   addReview,
 } = require("./contract");
 const db = require("./database");
@@ -43,18 +43,16 @@ app.listen(3001, () => {
 });
 
 //propogate changes from the blockchain to the database
-updateDatabaseOnUserUpdated();
+// updateDatabaseOnUserUpdated(); #deprecated
 
 //receive a request to create a new review
 app.post("/api/addReview", async (req, res) => {
   // Add review to blockchain contract
-  const { userId, wallet, review, googleToken } = req.body;
+  const { profID, review, rating, googleToken } = req.body;
   if (verifyUser(googleToken, "@bc.edu") == null) {
     res.status(500).json({ success: false, error: "Invalid Google Token" });
     return;
   }
-  const fromAddress = "0x..."; // Replace with the address that will send the transaction
-  const privateKey = "0x..."; // Replace with the private key of the fromAddress
 
   // Check if review is hate speech
   const isHate = await isHateSpeech(review);
@@ -69,12 +67,10 @@ app.post("/api/addReview", async (req, res) => {
       .json({ success: false, error: "Review contains hate speech" });
     return;
   }
-  const result = await addReview(userId, wallet, fromAddress, privateKey);
+  const result = await addReview(profID, review, rating);
 
   if (result.success) {
-    res
-      .status(200)
-      .json({ success: true, transactionHash: result.transactionHash });
+    res.status(200).json({ success: true, error: "Review successfully added" });
   } else {
     res.status(500).json({ success: false, error: "Error calling updateUser" });
   }
@@ -107,12 +103,12 @@ app.get("/api/getUniversities", async (req, res) => {
   }
 });
 
-app.get("/api/getReviews/:id", async (req, res) => {
-  const id = req.params.id;
+app.get("/api/getReviews", async (req, res) => {
+  const profID = req.params.id;
   // Get reviews from the blockchain or the SQLite database (TBD which one)
   try {
-    const reviews = await db.getReviews(id);
-    res.status(200).json(reviews);
+    const reviewInformation = await getReviews(profID);
+    res.status(200).json(reviewInformation);
   } catch (err) {
     console.log(err);
     res.status(500).json({ success: false, error: "Error getting reviews" });
