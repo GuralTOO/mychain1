@@ -257,98 +257,102 @@ db.dropTeaching = () => {
   });
 };
 
-module.exports = { db };
 
 // test data 
-db.serialize(() => {
-  db.addProfessor("Lewis Tseng");
-  db.addUniversity("Boston College");
-  db.addCourse("CSCI3389", "Blockchain and Consensus Systems");
-  db.addTeaching(1, 1, 1);
+db.addDefaultProfessors = () => {
+  db.serialize(() => {
+    db.addProfessor("Lewis Tseng");
+    db.addUniversity("Boston College");
+    db.addCourse("CSCI3389", "Blockchain and Consensus Systems");
+    db.addTeaching(1, 1, 1);
 
-  db.addProfessor("Jeffrey Carruthers");
-  db.addCourse("CASCS112", "Design by Software");
-  db.addTeaching(1, 1, 1);
+    db.addProfessor("Jeffrey Carruthers");
+    db.addCourse("CASCS112", "Design by Software");
+    db.addTeaching(1, 1, 1);
 
-  db.addProfessor("Sarah Johnson");
-  db.addCourse("CASCS101", "Intro to Programming");
-  db.addTeaching(2, 1, 2);
+    db.addProfessor("Sarah Johnson");
+    db.addCourse("CASCS101", "Intro to Programming");
+    db.addTeaching(2, 1, 2);
 
-  db.addProfessor("David Kim");
-  db.addCourse("CASCS231", "Data Structures");
-  db.addTeaching(3, 1, 3);
+    db.addProfessor("David Kim");
+    db.addCourse("CASCS231", "Data Structures");
+    db.addTeaching(3, 1, 3);
 
-  db.addProfessor("Samantha Lee");
-  db.addCourse("CASCS315", "Artificial Intelligence");
-  db.addTeaching(4, 1, 4);
+    db.addProfessor("Samantha Lee");
+    db.addCourse("CASCS315", "Artificial Intelligence");
+    db.addTeaching(4, 1, 4);
 
-  db.addProfessor("Brian Wilson");
-  db.addCourse("CASCS420", "Web Development");
-  db.addTeaching(5, 1, 5);
+    db.addProfessor("Brian Wilson");
+    db.addCourse("CASCS420", "Web Development");
+    db.addTeaching(5, 1, 5);
 
-  db.addProfessor("Jessica Kim");
-  db.addCourse("CASCS315", "Artificial Intelligence");
-  db.addTeaching(6, 1, 6);
+    db.addProfessor("Jessica Kim");
+    db.addCourse("CASCS315", "Artificial Intelligence");
+    db.addTeaching(6, 1, 6);
 
-  db.addProfessor("Daniel Lee");
-  db.addCourse("CASCS112", "Design by Software");
-  db.addTeaching(7, 1, 7);
+    db.addProfessor("Daniel Lee");
+    db.addCourse("CASCS112", "Design by Software");
+    db.addTeaching(7, 1, 7);
 
-  db.addProfessor("Melissa Jackson");
-  db.addCourse("CASCS420", "Web Development");
-  db.addTeaching(8, 1, 8);
+    db.addProfessor("Melissa Jackson");
+    db.addCourse("CASCS420", "Web Development");
+    db.addTeaching(8, 1, 8);
 
-  db.addProfessor("Alex Nguyen");
-  db.addCourse("CASCS101", "Intro to Programming");
-  db.addTeaching(9, 1, 9);
+    db.addProfessor("Alex Nguyen");
+    db.addCourse("CASCS101", "Intro to Programming");
+    db.addTeaching(9, 1, 9);
 
-  db.addProfessor("Sophia Rodriguez");
-  db.addCourse("CASCS231", "Data Structures");
-  db.addTeaching(10, 1, 10);
+    db.addProfessor("Sophia Rodriguez");
+    db.addCourse("CASCS231", "Data Structures");
+    db.addTeaching(10, 1, 10);
 
-  db.addProfessor("Kevin Lee");
-  db.addCourse("CASCS112", "Design by Software");
-  db.addTeaching(11, 1, 11);
+    db.addProfessor("Kevin Lee");
+    db.addCourse("CASCS112", "Design by Software");
+    db.addTeaching(11, 1, 11);
 
-  db.addProfessor("Grace Kim");
-  db.addCourse("CASCS101", "Intro to Programming");
-  db.addTeaching(12, 1, 12);
+    db.addProfessor("Grace Kim");
+    db.addCourse("CASCS101", "Intro to Programming");
+    db.addTeaching(12, 1, 12);
 
-  db.addProfessor("David Lee");
-  db.addCourse("CASCS420", "Web Development");
-  db.addTeaching(13, 1, 13);
+    db.addProfessor("David Lee");
+    db.addCourse("CASCS420", "Web Development");
+    db.addTeaching(13, 1, 13);
 
-  db.addProfessor("Michelle Chen");
-  db.addCourse("CASCS315", "Artificial Intelligence");
-  db.addTeaching(14, 1, 14);
+    db.addProfessor("Michelle Chen");
+    db.addCourse("CASCS315", "Artificial Intelligence");
+    db.addTeaching(14, 1, 14);
 
-  db.addProfessor("Jason Park");
-  db.addCourse("CASCS231", "Data Structures");
-  db.addTeaching(15, 1, 15);
+    db.addProfessor("Jason Park");
+    db.addCourse("CASCS231", "Data Structures");
+    db.addTeaching(15, 1, 15);
 
-  db.addProfessor("Karen Lee");
-  db.addCourse("CASCS101", "Intro to Programming");
-  db.addTeaching(16, 1, 16);
+    db.addProfessor("Karen Lee");
+    db.addCourse("CASCS101", "Intro to Programming");
+    db.addTeaching(16, 1, 16);
 
-  db.addProfessor("Ryan Kim");
-  db.addCourse("CASCS420", "Web Development");
-  db.addTeaching(17, 1, 17);
+    db.addProfessor("Ryan Kim");
+    db.addCourse("CASCS420", "Web Development");
+    db.addTeaching(17, 1, 17);
 
-  db.addProfessor("Jessica Park");
-  db.addCourse("CASCS112", "Design by Software");
-  db.addTeaching(18, 1, 18);
+    db.addProfessor("Jessica Park");
+    db.addCourse("CASCS112", "Design by Software");
+    db.addTeaching(18, 1, 18);
 
-  db.addProfessor("Ethan Chen");
-  db.addCourse("CASCS315", "Artificial Intelligence");
-  db.addTeaching(19, 1, 19);
+    db.addProfessor("Ethan Chen");
+    db.addCourse("CASCS315", "Artificial Intelligence");
+    db.addTeaching(19, 1, 19);
 
-  db.addProfessor("Rachel Lee");
-  db.addCourse("CASCS231", "Data Structures");
-  db.addTeaching(20, 1, 20);
+    db.addProfessor("Rachel Lee");
+    db.addCourse("CASCS231", "Data Structures");
+    db.addTeaching(20, 1, 20);
 
-  db.addProfessor("Adam Smith");
-  db.addCourse("CASCS420", "Web Development");
-  db.addTeaching(21, 1, 21);
+    db.addProfessor("Adam Smith");
+    db.addCourse("CASCS420", "Web Development");
+    db.addTeaching(21, 1, 21);
+  });
+};
+
+module.exports = { db };
 
 //   db.getUniversities();
 //   db.getAllProfessors();
