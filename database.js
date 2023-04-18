@@ -2,106 +2,136 @@ const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database(":memory:");
 
 db.serialize(() => {
-  db.run('CREATE TABLE IF NOT EXISTS professors (profID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)');
-  db.run('CREATE TABLE IF NOT EXISTS university (univID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)');
-  db.run('CREATE TABLE IF NOT EXISTS course (cID INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT NOT NULL, name TEXT NOT NULL)');
-  db.run('CREATE TABLE IF NOT EXISTS teaching (teachID INTEGER PRIMARY KEY AUTOINCREMENT, professorID INTEGER REFERENCES professors(profID), universityID INTEGER REFERENCES university(univID), courseID INTEGER REFERENCES course(cID))');
+  db.run(
+    "CREATE TABLE IF NOT EXISTS professors (profID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)"
+  );
+  db.run(
+    "CREATE TABLE IF NOT EXISTS university (univID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)"
+  );
+  db.run(
+    "CREATE TABLE IF NOT EXISTS course (cID INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT NOT NULL, name TEXT NOT NULL)"
+  );
+  db.run(
+    "CREATE TABLE IF NOT EXISTS teaching (teachID INTEGER PRIMARY KEY AUTOINCREMENT, professorID INTEGER REFERENCES professors(profID), universityID INTEGER REFERENCES university(univID), courseID INTEGER REFERENCES course(cID))"
+  );
   //db.run('CREATE TABLE reviews (id INTEGER PRIMARY KEY AUTOINCREMENT, professorID INTEGER REFERENCES professors(id), university TEXT NOT NULL, rating INTEGER, review TEXT)');
   // // Trigger checks rating is between 0 and 10 before inserting new row
   //db.run('CREATE TRIGGER IF NOT EXISTS check_rating BEFORE INSERT ON reviews WHEN NEW.rating < 0 OR NEW.rating > 10 BEGIN SELECT RAISE(ABORT, "Rating must be between 0 and 10"); END;');
 });
 
 // INSERT Data
-db.addProfessor = function(profName) {
+db.addProfessor = function (profName) {
   let success = false;
-    try {
-      success = db.run("INSERT INTO PROFESSORS (name) VALUES (?)", [profName]);   
-    } catch (dbError) {
-      console.error(dbError);
-    }
-    return success.changes > 0 ? true : false;
-}
+  try {
+    success = db.run("INSERT INTO PROFESSORS (name) VALUES (?)", [profName]);
+  } catch (dbError) {
+    console.error(dbError);
+  }
+  return success.changes > 0 ? true : false;
+};
 
 db.addUniversity = (name) => {
   let success = false;
-    try {
-      success = db.run("INSERT INTO UNIVERSITY (name) VALUES (?)", [name]);   
-    } catch (dbError) {
-      console.error(dbError);
-    }
-    return success.changes > 0 ? true : false;
-}
+  try {
+    success = db.run("INSERT INTO UNIVERSITY (name) VALUES (?)", [name]);
+  } catch (dbError) {
+    console.error(dbError);
+  }
+  return success.changes > 0 ? true : false;
+};
 
 db.addCourse = (code, name) => {
   let success = false;
-    try {
-      success = db.run("INSERT INTO COURSE (code, name) VALUES (?, ?)", [code, name]);   
-    } catch (dbError) {
-      console.error(dbError);
-    }
-    return success.changes > 0 ? true : false;
-}
+  try {
+    success = db.run("INSERT INTO COURSE (code, name) VALUES (?, ?)", [
+      code,
+      name,
+    ]);
+  } catch (dbError) {
+    console.error(dbError);
+  }
+  return success.changes > 0 ? true : false;
+};
 
 db.addTeaching = (professorID, universityID, courseID) => {
   let success = false;
-    try {
-      success = db.run("INSERT INTO TEACHING (professorID, universityID, courseID) VALUES (?, ?, ?)", [professorID, universityID, courseID]);   
-    } catch (dbError) {
-      console.error(dbError);
-    }
-    return success.changes > 0 ? true : false;
-}
+  try {
+    success = db.run(
+      "INSERT INTO TEACHING (professorID, universityID, courseID) VALUES (?, ?, ?)",
+      [professorID, universityID, courseID]
+    );
+  } catch (dbError) {
+    console.error(dbError);
+  }
+  return success.changes > 0 ? true : false;
+};
 
 db.addReview = (professorId, university, rating, reviewText) => {
   let success = false;
-    try {
-      success = db.run("INSERT INTO REVIEWS (professorID, university, rating, review) VALUES (?, ?, ?, ?)", [professorId, university, rating, reviewText]);
-    } catch (dbError) {
-      console.error(dbError);
-    }
-    return success.changes > 0 ? true : false;
+  try {
+    success = db.run(
+      "INSERT INTO REVIEWS (professorID, university, rating, review) VALUES (?, ?, ?, ?)",
+      [professorId, university, rating, reviewText]
+    );
+  } catch (dbError) {
+    console.error(dbError);
   }
+  return success.changes > 0 ? true : false;
+};
 
 // UPDATE Data
 db.updateProfessor = (profID, blockchainID, name) => {
   let success = false;
   try {
-    success = db.run("UPDATE PROFESSORS SET blockchainID = ?, name = ? WHERE profID = ?", [blockchainID, name, profID]);
+    success = db.run(
+      "UPDATE PROFESSORS SET blockchainID = ?, name = ? WHERE profID = ?",
+      [blockchainID, name, profID]
+    );
   } catch (dbError) {
     console.error(dbError);
   }
   return success.changes > 0 ? true : false;
-}
+};
 
 db.updateUniversity = (univID, name) => {
   let success = false;
   try {
-    success = db.run("UPDATE University SET name = ? WHERE univID = ?", [name, univID]);
+    success = db.run("UPDATE University SET name = ? WHERE univID = ?", [
+      name,
+      univID,
+    ]);
   } catch (dbError) {
     console.error(dbError);
   }
   return success.changes > 0 ? true : false;
-}
+};
 
 db.updateCourse = (cID, code, name) => {
   let success = false;
   try {
-    success = db.run("UPDATE course SET code = ?, name = ? WHERE cID = ?", [code, name, cID]);
+    success = db.run("UPDATE course SET code = ?, name = ? WHERE cID = ?", [
+      code,
+      name,
+      cID,
+    ]);
   } catch (dbError) {
     console.error(dbError);
   }
   return success.changes > 0 ? true : false;
-}
+};
 
 db.updateTeaching = (teachID, professorID, universityID, courseID) => {
   let success = false;
   try {
-    success = db.run("UPDATE teaching SET professorID = ?, universityID = ?, courseID = ? WHERE teachID = ?", [ professorID, universityID, courseID, teachID]);
+    success = db.run(
+      "UPDATE teaching SET professorID = ?, universityID = ?, courseID = ? WHERE teachID = ?",
+      [professorID, universityID, courseID, teachID]
+    );
   } catch (dbError) {
     console.error(dbError);
   }
   return success.changes > 0 ? true : false;
-}
+};
 
 // DELETE Data
 db.deleteProf = (profID) => {
@@ -112,7 +142,7 @@ db.deleteProf = (profID) => {
     console.error(dbError);
   }
   return success.changes > 0 ? true : false;
-}
+};
 
 db.deleteUniversity = (univID) => {
   let success = false;
@@ -122,7 +152,7 @@ db.deleteUniversity = (univID) => {
     console.error(dbError);
   }
   return success.changes > 0 ? true : false;
-}
+};
 
 db.deleteCourse = (cID) => {
   let success = false;
@@ -132,7 +162,7 @@ db.deleteCourse = (cID) => {
     console.error(dbError);
   }
   return success.changes > 0 ? true : false;
-}
+};
 
 db.deleteTeaching = (cID) => {
   let success = false;
@@ -142,9 +172,9 @@ db.deleteTeaching = (cID) => {
     console.error(dbError);
   }
   return success.changes > 0 ? true : false;
-}
+};
 
-// GET Data 
+// GET Data
 // get all columns from university table
 db.getUniversities = () => {
   db.all("SELECT * FROM university", (err, rows) => {
@@ -158,20 +188,25 @@ db.getUniversities = () => {
   });
 };
 
-// get professor id, professor blockchainID, professor name 
+// get professor id, professor blockchainID, professor name
 // for professors who have taught at the universityid inputed
 db.getProfessors = (universityID) => {
-  db.all("SELECT professors.profID, professors.name FROM professors INNER JOIN teaching ON professors.profID = teaching.professorID WHERE teaching.universityID = ?", 
-  [universityID], 
-  (err, rows) => {
-    if (err) {
-      console.error("Error getting professor from the database for this university:", err);
-      return rows;
-    } else {
-      console.log(rows);
-      return rows;
+  db.all(
+    "SELECT professors.profID, professors.name FROM professors INNER JOIN teaching ON professors.profID = teaching.professorID WHERE teaching.universityID = ?",
+    [universityID],
+    (err, rows) => {
+      if (err) {
+        console.error(
+          "Error getting professor from the database for this university:",
+          err
+        );
+        return rows;
+      } else {
+        console.log(rows);
+        return rows;
+      }
     }
-  });
+  );
 };
 
 // return all columns from professors table
@@ -257,8 +292,7 @@ db.dropTeaching = () => {
   });
 };
 
-
-// test data 
+// test data
 db.addDefaultProfessors = () => {
   db.serialize(() => {
     db.addProfessor("Lewis Tseng");
@@ -359,7 +393,6 @@ module.exports = { db };
 //   db.getProfessors(1);
 //   db.getProfessorsName("Lewis Tseng");
 
-
 // UPDATE Data
 //   db.updateProfessor(1, "Jane Doe");
 //   db.updateUniversity(1, "MIT");
@@ -379,4 +412,3 @@ module.exports = { db };
 //   db.getUniversities();
 //   db.getAllProfessors();
 //   db.getProfessors(1);
-});
