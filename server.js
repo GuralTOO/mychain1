@@ -15,6 +15,28 @@ const isHateSpeech = require("./ApiServices");
 app.use(cors());
 app.use(express.json());
 
+//set-up google authentication
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const oauth2Client = new OAuth2Client(GOOGLE_CLIENT_ID);
+
+// verify user
+const verifyUser = async (idToken, suffix) => {
+  try {
+    const ticket = await oauth2Client.verifyIdToken({
+      idToken: idToken,
+      audience: GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    userEmail = payload.email;
+    if (!userEmail.endsWith(suffix)) {
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
 //start the server
 app.listen(3001, () => {
   console.log("Server running on port 3001");
@@ -26,7 +48,11 @@ updateDatabaseOnUserUpdated();
 //receive a request to create a new review
 app.post("/api/addReview", async (req, res) => {
   // Add review to blockchain contract
-  const { userId, wallet, review } = req.body;
+  const { userId, wallet, review, googleToken } = req.body;
+  if (verifyUser(googleToken, "@bc.edu") == null) {
+    res.status(500).json({ success: false, error: "Invalid Google Token" });
+    return;
+  }
   const fromAddress = "0x..."; // Replace with the address that will send the transaction
   const privateKey = "0x..."; // Replace with the private key of the fromAddress
 
