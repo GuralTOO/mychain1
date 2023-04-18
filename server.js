@@ -3,11 +3,11 @@ const cors = require("cors");
 const app = express();
 
 // Nate changes: there are different exports now
-const {
-  // updateDatabaseOnUserUpdated,
-  addReview,
-  getReviews,
-} = require("./contract");
+// const {
+//   // updateDatabaseOnUserUpdated,
+//   addReview,
+//   getReviews,
+// } = require("./contract");
 
 const db = require("./database");
 const isHateSpeech = require("./ApiServices");
