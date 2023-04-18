@@ -2,6 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
+// Nate changes: there are different exports now
+const {
+  // updateDatabaseOnUserUpdated,
+  addReview,
+  getReviews
+} = require("./contract");
+
+
 const {
   // contract,
   // updateDatabaseOnUserUpdated,
@@ -45,6 +53,7 @@ app.listen(3001, () => {
 //propogate changes from the blockchain to the database
 // updateDatabaseOnUserUpdated(); #deprecated
 
+// Nate changes: should this be a different path, the function is in the contract.js
 //receive a request to create a new review
 app.post("/api/addReview", async (req, res) => {
   // Add review to blockchain contract
@@ -69,6 +78,7 @@ app.post("/api/addReview", async (req, res) => {
   }
   const result = await addReview(profID, review, rating);
 
+  // Nate changes: purpose of this?? Were not dealing with the transaction hash
   if (result.success) {
     res.status(200).json({ success: true, error: "Review successfully added" });
   } else {
@@ -76,6 +86,7 @@ app.post("/api/addReview", async (req, res) => {
   }
 });
 
+// Nate changes: the front end just needs to send a profID for this function, idk what :id is doing
 //receive a request to get all reviews for a professor
 
 app.get("/api/getProfessors/:id", async (req, res) => {

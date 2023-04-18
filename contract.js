@@ -1,71 +1,110 @@
+
 const Web3 = require("web3");
-const web3 = new Web3("https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID");
-const db = require("./database");
+const web3 = new Web3("https://eth-goerli.g.alchemy.com/v2/2weKkQ426LualTuW1XrCkDRyOOj284BH");
+const {ethers} = require("hardhat");
 
-const contractABI = []; // Replace with your smart contract ABI
-const contractAddress = "0x..."; // Replace with your smart contract address
-const contract = new web3.eth.Contract(contractABI, contractAddress);
+const apiKey = process.env.API_KEY;
+const privateKey = process.env.PRIVATE_KEY;
 
-// We will 90% likely not need this function
-const updateDatabaseOnReviewAdded = () => {
-  contract.events
-    .ReviewAdded()
-    .on("data", (event) => {
-      const userId = event.returnValues.userId;
-      const wallet = event.returnValues.wallet;
+const contractAddress = process.env.CONTRACT_ADDRESS;
+const contractJSON = require("../artifacts/contracts/ProfReview.sol/ProfReview.json");
 
-      db.run(
-        "UPDATE users SET wallet = ? WHERE id = ?", // Replace with a real SQL query
-        [wallet, userId],
-        (err) => {
-          if (err) {
-            console.error("Error propogating review to database:", err);
-          } else {
-            console.log(`Review for ${userId} added to database`);
-          }
-        }
-      );
-    })
-    .on("error", (error) => {
-      console.error("Error watching for Review Added event:", error);
-    });
-};
+// Get Alchemy provider
+const alchemyProvider = new ethers.providers.AlchemyProvider(network = "goerli", apiKey);
+// Get Signer
+const signer = new ethers.Wallet(privateKey, alchemyProvider);
 
-// This function will be called when a user adds a review
-const addReview = async (userId, wallet, fromAddress, privateKey) => {
+
+// Function that interacts with the database
+
+// const updateDatabaseOnReviewAdded = () => {
+//   contract.events
+//     .ReviewAdded()
+//     .on("data", (event) => {
+//       const userId = event.returnValues.userId;
+//       const wallet = event.returnValues.wallet;
+
+//       db.run(
+//         "UPDATE users SET wallet = ? WHERE id = ?", // Replace with a real SQL query
+//         [wallet, userId],
+//         (err) => {
+//           if (err) {
+//             console.error("Error propogating review to database:", err);
+//           } else {
+//             console.log(`Review for ${userId} added to database`);
+//           }
+//         }
+//       );
+//     })
+//     .on("error", (error) => {
+//       console.error("Error watching for Review Added event:", error);
+//     });
+// };
+
+
+const contractAdd = new ethers.Contract(contractAddress, contractJSON.abi, signer);
+
+// Function that is called to add a review to the blockchain
+
+const addReview = async (profID, review, rating) => {
   try {
-    const nonce = await web3.eth.getTransactionCount(fromAddress);
-    const gasPrice = await web3.eth.getGasPrice();
 
-    const txData = {
-      from: fromAddress,
-      to: contractAddress,
-      nonce: nonce,
-      gasPrice: gasPrice,
-      data: contract.methods.addReview(userId, wallet).encodeABI(),
-    };
+    console.log("Adding the review: " + review + "  Rating: " + rating);
+    const tx = await contractAdd.addReview(profID, review, rating).catch(error => {
+      throw new Error('might not have enough gas for transactions');
+    });
+    console.log("The review has been added");
+    
+    return { success: true};
 
-    const gasLimit = await web3.eth.estimateGas(txData);
-    txData.gas = gasLimit;
-
-    const signedTx = await web3.eth.accounts.signTransaction(
-      txData,
-      privateKey
-    );
-    const txReceipt = await web3.eth.sendSignedTransaction(
-      signedTx.rawTransaction
-    );
-
-    return { success: true, transactionHash: txReceipt.transactionHash };
   } catch (error) {
+
     console.error("Error calling addReview:", error);
     return { success: false, error: "Error calling addReview" };
+
   }
 };
 
-module.exports = {
-  contract,
-  updateDatabaseOnReviewAdded,
-  web3,
-  addReview,
+
+const contractGet = new web3.eth.Contract(contractJSON.abi, contractAddress);
+
+// API that retrieves the specific reviews for the professor
+
+const getReviews = async (profID) => {
+
+  let reviewList = [];
+  let average = 0;
+  let sum = 0;
+  let count = 0;
+
+  await contractGet.getPastEvents('UpdateReviews',
+    // This is the parameters for the API to search through the
+    // events of that smart contract
+    {
+        filter: {profID: profID},
+        fromBlock: 0,
+        toBlock: 'latest'
+    },
+    (err, events) => {
+        // For loop that goes through all the events captured and adds them 
+        // to a list and calculates the average rating.
+        events.forEach((event) => {
+            reviewList.push(event.returnValues.newReviews);
+            sum += parseInt(event.returnValues.newRating);
+            count++;
+        });
+        average = (sum / count);
+    });
+    return {reviewList: reviewList, average: average};
+
 };
+
+
+
+
+module.exports = {
+  //updateDatabaseOnReviewAdded,
+  addReview,
+  getReviews
+};
+
