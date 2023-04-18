@@ -9,13 +9,6 @@ const {
   getReviews,
 } = require("./contract");
 
-const {
-  // contract,
-  // updateDatabaseOnUserUpdated,
-  // web3,
-  getReviews,
-  addReview,
-} = require("./contract");
 const db = require("./database");
 const isHateSpeech = require("./ApiServices");
 
@@ -87,12 +80,15 @@ app.post("/api/addReview", async (req, res) => {
 
 // Nate changes: the front end just needs to send a profID for this function, idk what :id is doing
 //receive a request to get all reviews for a professor
+const professors = db.getProfessors(universityID);
+console.log(professors);
 
-app.get("/api/getProfessors/:id", async (req, res) => {
-  const id = req.params.id;
+app.get("/api/getProfessors/", async (req, res) => {
+  const universityID = req.params.universityID;
   // Get Professors from the SQLite database
   try {
-    const professors = await db.getProfessors(id);
+    const professors = await db.getProfessors(universityID);
+    console.log(professors);
     res.status(200).json(professors);
   } catch (err) {
     console.log(err);
