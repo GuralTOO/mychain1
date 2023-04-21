@@ -12,7 +12,12 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
+<<<<<<< HEAD
     "sqlite": "^4.1.2",
+=======
+    "hardhat": "^2.14.0",
+    "mongodb": "^5.2.0",
+>>>>>>> c6b265a85baed3b728ea0406e136a0cc24bbb82a
     "sqlite3": "^5.1.6",
     "web3": "^1.9.0"
   }
