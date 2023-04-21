@@ -188,8 +188,7 @@ db.getUniversities = () => {
   });
 };
 
-<<<<<<< HEAD
-// get professor id given input professor name
+// get professor id given input professor name, returns profID [ { profID: 21 } ]
 db.getProfID = (name) => {
   db.all(
     "SELECT professors.profID FROM professors WHERE name = ?",
@@ -209,8 +208,6 @@ db.getProfID = (name) => {
   );
 };
 
-=======
->>>>>>> c6b265a85baed3b728ea0406e136a0cc24bbb82a
 // get professor id, professor blockchainID, professor name
 // for professors who have taught at the universityid inputed
 db.getProfessors = (universityID) => {
@@ -258,7 +255,6 @@ db.getProfessorsName = (name) => {
   });
 };
 
-<<<<<<< HEAD
 // DROP TABLES
 db.dropProfessors = () => {
   db.all("DROP TABLE IF EXISTS professors", (err, rows) => {
@@ -297,63 +293,6 @@ db.dropTeaching = () => {
   db.all("DROP TABLE IF EXISTS teaching", (err, rows) => {
     if (err) {
       console.error("Error dropping teaching table from database:", err);
-=======
-// get Reviews for a professor by professor id
-// db.getReviews = (id) => {
-//   db.all("SELECT professors.name, reviews.university, reviews.rating, reviews.review FROM reviews INNER JOIN professors ON reviews.professorID = professors.id WHERE professors.ID = ?", [id], (err, rows) => {
-//     if (err) {
-//       console.error("Error getting reviews from database:", err);
-//       return rows;
-//     } else {
-//       return rows;
-//     }
-//   });
-// };
-
-// DROP TABLES
-db.dropProfessors = () => {
-  db.all("DROP TABLE IF EXISTS professors", (err, rows) => {
-    if (err) {
-      console.error("Error dropping professors table from from database:", err);
->>>>>>> c6b265a85baed3b728ea0406e136a0cc24bbb82a
-      return rows;
-    } else {
-      return rows;
-    }
-  });
-};
-
-<<<<<<< HEAD
-// test data
-db.addDefaultProfessors = () => {
-  db.serialize(() => {
-=======
-db.dropUniversity = () => {
-  db.all("DROP TABLE IF EXISTS university", (err, rows) => {
-    if (err) {
-      console.error("Error dropping university table from database:", err);
-      return rows;
-    } else {
-      return rows;
-    }
-  });
-};
-
-db.dropCourse = () => {
-  db.all("DROP TABLE IF EXISTS course", (err, rows) => {
-    if (err) {
-      console.error("Error dropping course table from database:", err);
-      return rows;
-    } else {
-      return rows;
-    }
-  });
-};
-
-db.dropTeaching = () => {
-  db.all("DROP TABLE IF EXISTS teaching", (err, rows) => {
-    if (err) {
-      console.error("Error dropping teaching table from database:", err);
       return rows;
     } else {
       return rows;
@@ -364,12 +303,6 @@ db.dropTeaching = () => {
 // test data
 db.addDefaultProfessors = () => {
   db.serialize(() => {
-    db.addProfessor("Lewis Tseng");
-    db.addUniversity("Boston College");
-    db.addCourse("CSCI3389", "Blockchain and Consensus Systems");
-    db.addTeaching(1, 1, 1);
-
->>>>>>> c6b265a85baed3b728ea0406e136a0cc24bbb82a
     db.addProfessor("Jeffrey Carruthers");
     db.addCourse("CASCS112", "Design by Software");
     db.addTeaching(1, 1, 1);
@@ -458,37 +391,11 @@ db.addDefaultProfessors = () => {
 
 module.exports = { db };
 
-<<<<<<< HEAD
 db.addDefaultProfessors();
 //db.getProfID("Adam Smith");
 //db.getAllProfessors();
-=======
+
 //   db.getUniversities();
 //   db.getAllProfessors();
 //   db.getProfessors(1);
 //   db.getProfessorsName("Lewis Tseng");
-
-// UPDATE Data
-//   db.updateProfessor(1, "Jane Doe");
-//   db.updateUniversity(1, "MIT");
-//   db.updateCourse(1, "CS102", "Computer Science II");
-//   db.updateTeaching(1, 2, 2, "CS102");
-//   db.getUniversities();
-//   db.getAllProfessors();
-//   db.getProfessors(1);
-
-//   // DELETE Data
-//   db.deleteProf(1);
-//   db.deleteUniversity(1);
-//   db.deleteCourse("CS102");
-//   db.deleteTeaching(1);
-//   db.deleteReview(1);
->>>>>>> c6b265a85baed3b728ea0406e136a0cc24bbb82a
-
-//   db.getUniversities();
-//   db.getAllProfessors();
-//   db.getProfessors(1);
-<<<<<<< HEAD
-//   db.getProfessorsName("Lewis Tseng");
-=======
->>>>>>> c6b265a85baed3b728ea0406e136a0cc24bbb82a
